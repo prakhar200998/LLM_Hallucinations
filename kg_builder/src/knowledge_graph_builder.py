@@ -65,6 +65,9 @@ def map_to_base_relationship(rel: Relationship) -> BaseRelationship:
     )
 
 import os
+from dotenv import load_dotenv
+load_dotenv()  # This loads the variables from .env into os.environ
+
 from langchain.chains.openai_functions import (
     create_openai_fn_chain,
     create_structured_output_runnable,
@@ -74,7 +77,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 
 # Setting the OpenAI API key for usage in LLM calls
-os.environ["OPENAI_API_KEY"] = "sk-proj-hceIL56CC2zfjAvAlMjbT3BlbkFJyHKX2wbiQxsG9yy8dGJN"
+os.environ["OPENAI_API_KEY"]
 llm = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
 
 def get_extraction_chain(
