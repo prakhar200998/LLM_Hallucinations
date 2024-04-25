@@ -7,7 +7,7 @@ from tqdm import tqdm
 def main():
     print("Starting the script...")
     # Take Wikipedia article name as input
-    article_name = input("Enter the Wikipedia article name: ")  # Corrected to proper input usage
+    article_name = input("Enter the Wikipedia article name: ")  
 
     print(f"Loading documents for: {article_name}")
     # Load and process the Wikipedia article

@@ -1,16 +1,20 @@
 
 from langchain_community.graphs import Neo4jGraph
+from dotenv import load_dotenv
 import os
 
-# Neo4j connection setup
-url = "neo4j+s://2f409740.databases.neo4j.io"
-username = "neo4j"
-password = "oe7A9ugxhxcuEtwci8khPIt2TTdz_am9AYDx1r9e9Tw"
+load_dotenv()  # This loads the variables from .env into os.environ
+
+# Now use os.getenv to access your variables
+url = os.getenv("NEO4J_URL")
+username = os.getenv("NEO4J_USERNAME")
+password = os.getenv("NEO4J_PASSWORD")
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
 graph = Neo4jGraph(
     url=url,
     username=username,
     password=password
 )
 
-# OpenAI API key setup
-os.environ["OPENAI_API_KEY"] = "sk-proj-hceIL56CC2zfjAvAlMjbT3BlbkFJyHKX2wbiQxsG9yy8dGJN"
+
