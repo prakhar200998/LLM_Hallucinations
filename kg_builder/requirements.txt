@@ -1,0 +1,10 @@
+numpy
+pandas
+requests
+openai
+neo4j
+wikipedia
+tiktoken
+langchain
+langchain_openai
+tqdm
