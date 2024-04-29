@@ -1,5 +1,5 @@
 
-from api_connections import graph
+from api_connections import get_graph_connection
 
 from langchain_community.graphs.graph_document import (
     Node as BaseNode,
@@ -22,8 +22,11 @@ from langchain.chains.openai_functions import (
 
 def extract_and_store_graph(
     document: Document,
+    category: str,
     nodes:Optional[List[str]] = None,
     rels:Optional[List[str]]=None) -> None:
+    
+    graph = get_graph_connection(category)
     # Extract graph data using OpenAI functions
     extract_chain = get_extraction_chain(nodes, rels)
     data = extract_chain.invoke(document.page_content)['function']
