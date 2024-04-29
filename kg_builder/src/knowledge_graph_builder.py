@@ -28,7 +28,7 @@ def extract_and_store_graph(
     
     graph = get_graph_connection(category)
     # Extract graph data using OpenAI functions
-    extract_chain = get_extraction_chain(nodes, rels)
+    extract_chain = get_extraction_chain(category, nodes, rels)
     data = extract_chain.invoke(document.page_content)['function']
     # Construct a graph document
     graph_document = GraphDocument(
