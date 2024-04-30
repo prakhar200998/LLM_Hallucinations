@@ -13,6 +13,7 @@ This project builds and queries knowledge graphs from Wikipedia articles using t
 - pip and virtualenv (optional)
 - Access to a Neo4j database
 - OpenAI API key
+- Extra change
 
 ## Installation
 1. **Clone the repository**:

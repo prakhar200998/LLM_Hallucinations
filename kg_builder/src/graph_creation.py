@@ -1,10 +1,8 @@
 from langchain_community.document_loaders import WikipediaLoader
 from langchain.text_splitter import TokenTextSplitter
 from knowledge_graph_builder import extract_and_store_graph
-from langchain.schema import Document
 from dotenv import load_dotenv
 from tqdm import tqdm
-import os
 
 # Load environment variables
 load_dotenv()

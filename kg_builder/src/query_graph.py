@@ -1,6 +1,5 @@
 from langchain.chains import GraphCypherQAChain
 from langchain_openai import ChatOpenAI
-from api_connections import graph  # Importing 'graph' from 'api_connections.py'
 
 def query_knowledge_graph(graph, query):
     print("Refreshing the graph schema...")

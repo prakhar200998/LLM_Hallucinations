@@ -1,7 +1,6 @@
 from langchain_community.graphs.graph_document import (
     Node as BaseNode,
     Relationship as BaseRelationship,
-    GraphDocument,
 )
 from langchain.schema import Document
 from typing import List, Dict, Any, Optional

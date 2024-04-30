@@ -13,13 +13,6 @@ from models import Node, Relationship, KnowledgeGraph
 from utils import map_to_base_node, map_to_base_relationship
 from api_connections import get_extraction_chain
 
-from langchain.chains.openai_functions import (
-    create_openai_fn_chain,
-    create_structured_output_runnable,
-    create_structured_output_chain,
-)
-
-
 def extract_and_store_graph(
     document: Document,
     category: str,
