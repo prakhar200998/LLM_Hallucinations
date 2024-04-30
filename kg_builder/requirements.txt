@@ -8,3 +8,4 @@ tiktoken
 langchain
 langchain_openai
 tqdm
+python-dotenv
