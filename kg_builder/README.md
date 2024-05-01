@@ -18,8 +18,8 @@ This project builds and queries knowledge graphs from Wikipedia articles using t
 ## Installation
 1. **Clone the repository**:
     ```bash
-    git clone https://yourrepository.git
-    cd your_project_directory
+    git clone git@hf.co:Master-Thesis-Prakhar/GraphRAG
+    cd GraphRAG
     ```
 2. **Set up a Python virtual environment (optional):**
     ```bash
