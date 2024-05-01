@@ -15,12 +15,19 @@ def get_llm():
 def classify_query(query):
     llm = get_llm()
     try:
-        response = llm.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-3.5-turbo-16k",
-            messages=[{"role": "user", "content": f"Classify the following query into 'Chemotherapy' or 'Traffic Law': {query}"}],
+            messages=[
+                {"role": "system", "content": "Respond with classifying the query into 'Chemotherapy' or 'Traffic Law' based on the content of the user's query. Do not respond with anything else. Only 'Chemotherapy' or 'Traffic Law' depending on whichever field the query is closest to."},
+                {"role": "user", "content": f"{query}"}
+            ],
             max_tokens=60
         )
-        return response['choices'][0]['message']['content'].strip()
+        category = response.choices[0].message.content
+        if category in ["Chemotherapy", "Traffic Law"]:
+            return category
+        else:
+            return None
     except Exception as e:
         print(f"Error during classification: {e}")
         return None
