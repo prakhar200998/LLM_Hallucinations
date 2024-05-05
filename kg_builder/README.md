@@ -39,7 +39,13 @@ This project builds and queries knowledge graphs from Wikipedia articles using t
 
 ## Usage
 
-1. **Run the main script:**
+1. Create Graph
+    ```bash
+    python3 kg_builder/src/graph_creation.py
+    ```
+
+
+2. **Run the main script:**
     ```bash
     python main.py
     ```
