@@ -7,26 +7,49 @@ from tqdm import tqdm
 # Load environment variables
 load_dotenv()
 
-# Define articles to load
+# Define articles / topics to load
+#articles = {
+#    "Chemotherapy": "Chemotherapy",
+#    "Traffic Law": "Traffic laws in the United States"
+#}
 articles = {
-    "Chemotherapy": "Chemotherapy",
     "Traffic Law": "Traffic laws in the United States"
 }
 
-def build_graph_for_article(article_name, category):
-    print(f"Loading documents for: {article_name}")
-    # Load and process the Wikipedia article
-    raw_documents = WikipediaLoader(query=article_name).load()
-    if not raw_documents:
-        print(f"Failed to load content for {article_name}")
-        return
-    
-    text_splitter = TokenTextSplitter(chunk_size=4096, chunk_overlap=96)
-    documents = text_splitter.split_documents(raw_documents[:5])  # Only process the first 5 documents
+def build_graph_for_article(query, category):
+    """
+    Build knowledge graph from loaded articles / documents of a particular topic
+    :param query: The query string to search on Wikipedia, e.g. "Traffic laws in the United States"
+    :param category: For example "Traffic Law"
+    :return:
+    """
+    load_max_documents = 5
+    #chunk_size=4096
+    #chunk_overlap=96
+    chunk_size=400
+    chunk_overlap=10
 
-    print("Building the knowledge graph...")
-    for i, document in tqdm(enumerate(documents), total=len(documents)):
-        extract_and_store_graph(document, category)
+    print(f"Loading document(s) from Wikipedia using query '{query}' ...")
+    raw_documents = WikipediaLoader(query=query, load_max_docs=load_max_documents).load()
+    if not raw_documents:
+        print(f"Failed to load content for query: {query}")
+        return
+
+    print(f"{str(len(raw_documents))} document(s) loaded from Wikipedia.")
+    for doc in raw_documents:
+        print(f"Document: {doc.metadata['source']}")
+        #print(f"Document: {doc.page_content}")
+
+    print(f"Split document(s) into chunk(s) (Chunk size: {chunk_size}, Chunk overlap: {chunk_overlap}) ...")
+    text_splitter = TokenTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    chunkDocs = text_splitter.split_documents(raw_documents[:load_max_documents])  # Only process the first 5 documents
+    print(f"{str(len(raw_documents))} document(s) split into {str(len(chunkDocs))} chunk(s)")
+
+    print(f"Building the knowledge graph for document(s) found by query '{query}' ...")
+    for i, chunkDoc in tqdm(enumerate(chunkDocs), total=len(chunkDocs)):
+        print(f"Extract data from chunk {str(i)} ...")
+        #print(f"Extract data from chunk {str(i)}: {chunkDoc.page_content}")
+        extract_and_store_graph(chunkDoc, category)
 
 def main():
     for category, title in articles.items():
