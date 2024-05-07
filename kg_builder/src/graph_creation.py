@@ -1,6 +1,6 @@
 import logging
 
-from langchain_community.document_loaders import WikipediaLoader
+from langchain_community.document_loaders import WikipediaLoader, UnstructuredHTMLLoader
 from langchain.text_splitter import TokenTextSplitter
 from knowledge_graph_builder import extract_and_store_graph
 from dotenv import load_dotenv
@@ -15,18 +15,21 @@ load_dotenv()
 
 # IMPORTANT: Make sure data source names match with values inside api_connections.py
 # Define articles / topics to load
-#articles = {
-#    "Chemotherapy": "Chemotherapy",
-#    "Traffic Law": "Traffic laws in the United States"
-#}
+articlesDISABLED = {
+    "Chemotherapy": "Chemotherapy",
+    "Traffic Law": "Traffic laws in the United States"
+}
 # Switzerland: https://www.fedlex.admin.ch/eli/cc/1962/1364_1409_1420/de
 # Connecticut: https://en.wikipedia.org/wiki/Transportation_in_Connecticut#Rules_of_the_road
 articles = {
     "Traffic Law": "Traffic laws in the United States"
 }
-#articles = {
-#    "SquirroDocs": "https://docs.squirro.com/en/latest/technical/getting-started.html"
-#}
+articlesDISABLED = {
+    "SquirroDocs": "https://docs.squirro.com/en/latest/technical/getting-started.html"
+}
+articlesDISABLED = {
+    "SquirroDocs": "/Users/michaelwechner/Desktop/docs.squirro.com_en_latest_technical_getting-started.html"
+}
 
 def build_graph_for_article(query, data_source_name):
     """
@@ -43,7 +46,8 @@ def build_graph_for_article(query, data_source_name):
 
     if data_source_name == "SquirroDocs":
         logger.info(f"Loading document(s) from public website {query} ...")
-        raw_documents = None
+        loader = UnstructuredHTMLLoader(query)
+        raw_documents = loader.load()
     else:
         logger.info(f"Loading document(s) from Wikipedia using query '{query}' ...")
         raw_documents = WikipediaLoader(query=query, load_max_docs=load_max_documents).load()
@@ -52,7 +56,7 @@ def build_graph_for_article(query, data_source_name):
         logger.error(f"Failed to load content for Data Source '{data_source_name}'!")
         return
 
-    logger.info(f"{str(len(raw_documents))} document(s) loaded from Wikipedia.")
+    logger.info(f"{str(len(raw_documents))} document(s) loaded.")
     for doc in raw_documents:
         logger.info(f"Document: {doc.metadata['source']}")
         #print(f"Document: {doc.page_content}")
