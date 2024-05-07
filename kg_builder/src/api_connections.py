@@ -29,8 +29,13 @@ def get_graph_connection(data_source_name):
         url = os.getenv("TRAFFIC_NEO4J_URL")
         username = os.getenv("TRAFFIC_NEO4J_USERNAME")
         password = os.getenv("TRAFFIC_NEO4J_PASSWORD")
+    elif data_source_name == "SquirroDocs":
+        url = os.getenv("TRAFFIC_NEO4J_URL")
+        username = os.getenv("TRAFFIC_NEO4J_USERNAME")
+        password = os.getenv("TRAFFIC_NEO4J_PASSWORD")
     else:
-        raise ValueError(f"No such Data Source connection configured: {data_source_name}")
+        errorMsg = f"No such Data Source connection configured: {data_source_name}"
+        raise ValueError(errorMsg)
 
     return Neo4jGraph(url=url, username=username, password=password)
 
@@ -87,6 +92,39 @@ def get_extraction_chain(
     Rigorous adherence to these instructions is essential. Failure to comply with the specified formatting and labeling norms will necessitate output revision or discard.
     """
 
+    elif data_source_name == "SquirroDocs":
+        # Squirro Docs-specific prompt
+        prompt_text = f"""# Knowledge Graph Instructions for GPT-4
+    ## 1. Overview
+    You are a sophisticated algorithm tailored for parsing Wikipedia pages to construct a knowledge graph about Squirro documentation.
+    - **Nodes** symbolize entities such as types of traffic violations, penalties, driving regulations, and relevant legal statutes.
+    - The goal is to create a precise and comprehensible knowledge graph, serving as a reliable resource for legal professionals, law enforcement agencies, and the general public.
+
+    ## 2. Labeling Nodes
+    - **Consistency**: Utilize uniform labels for node types to maintain clarity.
+    - For instance, consistently label violations as **"Violation"**, penalties as **"Penalty"**, and statutes as **"Statute"**.
+    - **Node IDs**: Apply descriptive, legible identifiers for node IDs, sourced directly from the text.
+    {'- **Allowed Node Labels:**' + ", ".join(['Violation', 'Penalty', 'Statute', 'VehicleType', 'LegalDocument']) if allowed_nodes else ""}
+    {'- **Allowed Relationship Types**:' + ", ".join(['Violates', 'Penalizes', 'Governs', 'Cites']) if allowed_rels else ""}
+
+    ## 3. Handling Numerical Data and Dates
+    - Integrate numerical data and dates as attributes of the corresponding nodes.
+    - **No Isolated Nodes for Dates/Numbers**: Directly associate dates and numerical figures as attributes with pertinent nodes.
+    - **Property Format**: Follow a straightforward key-value pattern for properties, with keys in camelCase, for example, `fineAmount`, `lawEffectiveDate`.
+
+    ## 4. Coreference Resolution
+    - **Entity Consistency**: Guarantee uniform identification of each entity across the graph.
+    - For example, if "Vehicle Code 22350" and "Speed Law" reference the same statute, uniformly apply "Vehicle Code 22350" as the node ID.
+
+    ## 5. Relationship Naming Conventions
+    - **Clarity and Standardization**: Utilize clear and standardized relationship names, preferring uppercase with underscores for readability.
+    - For instance, use "IS_PENALIZED_BY" instead of "ISPENALIZEDBY", use "IS_GOVERNED_BY" instead of "ISGOVERNEDBY" etc. You keep making the same mistakes of storing the relationships without the "_" in between the words. Any further similar errors will lead to termination.
+    - **Relevance and Specificity**: Choose relationship names that accurately reflect the connection between nodes, such as "REQUIRES" or "PROHIBITS" for legal requirements or prohibitions.
+
+    ## 6. Strict Compliance
+    Rigorous adherence to these instructions is essential. Failure to comply with the specified formatting and labeling norms will necessitate output revision or discard.
+    """
+
     elif data_source_name == "Traffic Law":
         # Traffic Law-specific prompt
         prompt_text = f"""# Knowledge Graph Instructions for GPT-4
@@ -121,7 +159,8 @@ def get_extraction_chain(
     """
 
     else:
-        raise ValueError(f"No prompt configured for Data Source {data_source_name}")
+        errorMsg = f"No prompt configured for Data Source ¨{data_source_name}¨!"
+        raise ValueError(errorMsg)
 
     logger.info(f"Prompt to extract graph data: {prompt_text}")
     
