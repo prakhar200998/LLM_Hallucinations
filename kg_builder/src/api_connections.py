@@ -47,6 +47,13 @@ def get_extraction_chain(
     allowed_nodes: Optional[List[str]] = None,
     allowed_rels: Optional[List[str]] = None
     ):
+    """
+    TODO
+    :param data_source_name: Data source name, e.g. "Traffic Law"
+    :param allowed_nodes: TODO
+    :param allowed_rels: TODO
+    :return: TODO
+    """
     if data_source_name == "Chemotherapy":
         # Chemotherapy-specific prompt
         prompt_text = f"""# Knowledge Graph Instructions for GPT-4
