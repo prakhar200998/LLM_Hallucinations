@@ -13,6 +13,8 @@ load_dotenv()
 #    "Chemotherapy": "Chemotherapy",
 #    "Traffic Law": "Traffic laws in the United States"
 #}
+# Switzerland: https://www.fedlex.admin.ch/eli/cc/1962/1364_1409_1420/de
+# Connecticut: https://en.wikipedia.org/wiki/Transportation_in_Connecticut#Rules_of_the_road
 articles = {
     "Traffic Law": "Traffic laws in the United States"
 }
