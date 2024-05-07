@@ -7,6 +7,7 @@ from tqdm import tqdm
 # Load environment variables
 load_dotenv()
 
+# IMPORTANT: Make sure data source names match with values inside api_connections.py
 # Define articles / topics to load
 #articles = {
 #    "Chemotherapy": "Chemotherapy",
