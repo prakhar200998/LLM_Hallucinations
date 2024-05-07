@@ -15,7 +15,7 @@ jsonpatch==1.33
 jsonpickle==3.0.4
 langchain==0.1.16
 langchain-community==0.0.34
-langchain-core==0.1.45
+langchain-core==0.1.46
 langchain-text-splitters==0.0.1
 langsmith==0.1.49
 marshmallow==3.21.1
@@ -25,3 +25,4 @@ orjson==3.10.1
 tenacity==8.2.3
 tiktoken==0.6.0
 typing-inspect==0.9.0
+unstructured==0.11.8
