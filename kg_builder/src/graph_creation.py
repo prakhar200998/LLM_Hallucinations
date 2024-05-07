@@ -1,8 +1,14 @@
+import logging
+
 from langchain_community.document_loaders import WikipediaLoader
 from langchain.text_splitter import TokenTextSplitter
 from knowledge_graph_builder import extract_and_store_graph
 from dotenv import load_dotenv
 from tqdm import tqdm
+
+logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # Load environment variables
 load_dotenv()
@@ -32,25 +38,25 @@ def build_graph_for_article(query, data_source_name):
     chunk_size=400
     chunk_overlap=10
 
-    print(f"Loading document(s) from Wikipedia using query '{query}' ...")
+    logger.info(f"Loading document(s) from Wikipedia using query '{query}' ...")
     raw_documents = WikipediaLoader(query=query, load_max_docs=load_max_documents).load()
     if not raw_documents:
-        print(f"Failed to load content for query: {query}")
+        logger.error(f"Failed to load content for query: {query}")
         return
 
-    print(f"{str(len(raw_documents))} document(s) loaded from Wikipedia.")
+    logger.info(f"{str(len(raw_documents))} document(s) loaded from Wikipedia.")
     for doc in raw_documents:
-        print(f"Document: {doc.metadata['source']}")
+        logger.info(f"Document: {doc.metadata['source']}")
         #print(f"Document: {doc.page_content}")
 
-    print(f"Split document(s) into chunk(s) (Chunk size: {chunk_size}, Chunk overlap: {chunk_overlap}) ...")
+    logger.info(f"Split document(s) into chunk(s) (Chunk size: {chunk_size}, Chunk overlap: {chunk_overlap}) ...")
     text_splitter = TokenTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     chunkDocs = text_splitter.split_documents(raw_documents[:load_max_documents])  # Only process the first 5 documents
-    print(f"{str(len(raw_documents))} document(s) split into {str(len(chunkDocs))} chunk(s)")
+    logger.info(f"{str(len(raw_documents))} document(s) split into {str(len(chunkDocs))} chunk(s)")
 
-    print(f"Building the knowledge graph for document(s) found by query '{query}' ...")
+    logger.info(f"Building the knowledge graph for document(s) found by query '{query}' ...")
     for i, chunkDoc in tqdm(enumerate(chunkDocs), total=len(chunkDocs)):
-        print(f"Extract data from chunk {str(i)} ...")
+        logger.info(f"Extract data from chunk {str(i)} ...")
         #print(f"Extract data from chunk {str(i)}: {chunkDoc.page_content}")
         extract_and_store_graph(chunkDoc, data_source_name)
 
