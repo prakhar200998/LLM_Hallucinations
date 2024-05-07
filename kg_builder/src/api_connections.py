@@ -1,3 +1,4 @@
+import logging
 
 from langchain_community.graphs import Neo4jGraph
 from dotenv import load_dotenv
@@ -8,20 +9,28 @@ from langchain.prompts import ChatPromptTemplate
 from models import KnowledgeGraph
 from typing import Optional, List
 
+logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 load_dotenv()  # This loads the variables from .env into os.environ
 
-def get_graph_connection(category):
-    if category == "Chemotherapy":
+def get_graph_connection(data_source_name):
+    """
+    Get Neo4j graph connection
+    :param data_source_name: Data source name, e.g. "Traffic Law"
+    :return: Neo4j graph connection
+    """
+    if data_source_name == "Chemotherapy":
         url = os.getenv("CHEMO_NEO4J_URL")
         username = os.getenv("CHEMO_NEO4J_USERNAME")
         password = os.getenv("CHEMO_NEO4J_PASSWORD")
-    elif category == "Traffic Law":
+    elif data_source_name == "Traffic Law":
         url = os.getenv("TRAFFIC_NEO4J_URL")
         username = os.getenv("TRAFFIC_NEO4J_USERNAME")
         password = os.getenv("TRAFFIC_NEO4J_PASSWORD")
     else:
-        raise ValueError(f"Unknown category: {category}")
+        raise ValueError(f"No such Data Source connection configured: {data_source_name}")
 
     return Neo4jGraph(url=url, username=username, password=password)
 
@@ -34,11 +43,11 @@ def get_llm():
     return ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
 
 def get_extraction_chain(
-    category,
+    data_source_name,
     allowed_nodes: Optional[List[str]] = None,
     allowed_rels: Optional[List[str]] = None
     ):
-    if category == "Chemotherapy":
+    if data_source_name == "Chemotherapy":
         # Chemotherapy-specific prompt
         prompt_text = f"""# Knowledge Graph Instructions for GPT-4
     ## 1. Overview
@@ -71,7 +80,7 @@ def get_extraction_chain(
     Rigorous adherence to these instructions is essential. Failure to comply with the specified formatting and labeling norms will necessitate output revision or discard.
     """
 
-    elif category == "Traffic Law":
+    elif data_source_name == "Traffic Law":
         # Traffic Law-specific prompt
         prompt_text = f"""# Knowledge Graph Instructions for GPT-4
     ## 1. Overview
@@ -105,7 +114,9 @@ def get_extraction_chain(
     """
 
     else:
-        raise ValueError("Unknown category")
+        raise ValueError(f"No prompt configured for Data Source {data_source_name}")
+
+    logger.info(f"Prompt to extract graph data: {prompt_text}")
     
     llm = get_llm()
     prompt = ChatPromptTemplate.from_messages(
