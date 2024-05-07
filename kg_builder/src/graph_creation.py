@@ -24,6 +24,9 @@ load_dotenv()
 articles = {
     "Traffic Law": "Traffic laws in the United States"
 }
+#articles = {
+#    "SquirroDocs": "https://docs.squirro.com/en/latest/technical/getting-started.html"
+#}
 
 def build_graph_for_article(query, data_source_name):
     """
@@ -38,10 +41,15 @@ def build_graph_for_article(query, data_source_name):
     chunk_size=400
     chunk_overlap=10
 
-    logger.info(f"Loading document(s) from Wikipedia using query '{query}' ...")
-    raw_documents = WikipediaLoader(query=query, load_max_docs=load_max_documents).load()
+    if data_source_name == "SquirroDocs":
+        logger.info(f"Loading document(s) from public website {query} ...")
+        raw_documents = None
+    else:
+        logger.info(f"Loading document(s) from Wikipedia using query '{query}' ...")
+        raw_documents = WikipediaLoader(query=query, load_max_docs=load_max_documents).load()
+
     if not raw_documents:
-        logger.error(f"Failed to load content for query: {query}")
+        logger.error(f"Failed to load content for Data Source '{data_source_name}'!")
         return
 
     logger.info(f"{str(len(raw_documents))} document(s) loaded from Wikipedia.")
