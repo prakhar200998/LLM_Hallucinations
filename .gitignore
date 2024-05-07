@@ -2,3 +2,4 @@ graphrag/
 .env
 .ipynb
 .idea
+__pycache__
