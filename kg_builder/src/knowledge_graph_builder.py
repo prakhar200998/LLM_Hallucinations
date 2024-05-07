@@ -31,7 +31,7 @@ def extract_and_store_graph(
     :param rels: TODO
     """
 
-    logger.info("Extract graph data using OpenAI functions ...")
+    logger.info(f"Extract graph data (Data Source: {data_source_name}) using OpenAI functions ...")
     extract_chain = get_extraction_chain(data_source_name, nodes, rels)
     data = extract_chain.invoke(document.page_content)['function']
     # Construct a graph document
