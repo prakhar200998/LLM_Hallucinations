@@ -16,11 +16,11 @@ articles = {
     "Traffic Law": "Traffic laws in the United States"
 }
 
-def build_graph_for_article(query, category):
+def build_graph_for_article(query, data_source_name):
     """
     Build knowledge graph from loaded articles / documents of a particular topic
     :param query: The query string to search on Wikipedia, e.g. "Traffic laws in the United States"
-    :param category: For example "Traffic Law"
+    :param data_source_name: Data source name, e.g. "Traffic Law"
     :return:
     """
     load_max_documents = 5
@@ -49,11 +49,11 @@ def build_graph_for_article(query, category):
     for i, chunkDoc in tqdm(enumerate(chunkDocs), total=len(chunkDocs)):
         print(f"Extract data from chunk {str(i)} ...")
         #print(f"Extract data from chunk {str(i)}: {chunkDoc.page_content}")
-        extract_and_store_graph(chunkDoc, category)
+        extract_and_store_graph(chunkDoc, data_source_name)
 
 def main():
-    for category, title in articles.items():
-        build_graph_for_article(title, category)
+    for data_source_name, query in articles.items():
+        build_graph_for_article(query, data_source_name)
 
 if __name__ == "__main__":
     main()
